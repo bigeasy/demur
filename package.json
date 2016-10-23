@@ -1,6 +1,6 @@
 {
     "name":                 "demur",
-    "version":              "9.9.9",
+    "version":              "0.0.0",
     "description":
 
       "Error-first callback back off and retry.",
