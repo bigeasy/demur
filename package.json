@@ -1,0 +1,36 @@
+{
+    "name":                 "demur",
+    "version":              "9.9.9",
+    "description":
+
+      "Error-first callback back off and retry.",
+
+    "keywords":
+    [
+                            "async", "timeout"
+    ],
+    "author":               "Alan Gutierrez <alan@prettyrobots.com>",
+    "homepage":             "https://bigeasy.github.io/demur",
+    "bugs":                 "https://github.com/bigeasy/demur/issues",
+    "license":              "MIT",
+    "repository":
+    {
+                            "type": "git",
+                            "url": "http://github.com/bigeasy/demur.git"
+    },
+    "dependencies":
+    {
+                            "cadence":                      "1.0.x",
+                            "seedrandom":                   "2.4.2",
+                            "vestibule":                    "1.4.x"
+    },
+    "devDependencies":
+    {
+                            "proof":                        "1.2.x"
+    },
+    "main": "demur",
+    "scripts":
+    {
+                            "test": "proof platform win32 && proof test */*/*.t.js || t/test"
+    }
+}
