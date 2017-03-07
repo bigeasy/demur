@@ -1,4 +1,4 @@
-var Vestibule = require('vestibule')
+var Signal = require('signal')
 var cadence = require('cadence')
 var seedrandom = require('seedrandom')
 
@@ -17,7 +17,7 @@ function Demur (options) {
     this._lastChecked = options.reset == null ? 0 : this._Date.now() - options.reset - 1
     this._duration = this._minimum
     this._attempt = 0
-    this._retrying = new Vestibule
+    this._retrying = new Signal
 }
 
 Demur.prototype._retry = function (random) {
@@ -41,7 +41,7 @@ Demur.prototype.retry = cadence(function (async) {
     async(function () {
         var duration = this._retry(this._random)
         if (duration != 0) {
-            this._retrying.enter(async())
+            this._retrying.wait(async())
             this._timeout = setTimeout(this._retrying.notify.bind(this._retrying), duration)
         }
     }, function () {
