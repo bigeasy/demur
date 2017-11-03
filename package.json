@@ -21,6 +21,7 @@
     "dependencies":
     {
                             "cadence":                      "1.0.x",
+                            "extant":                       "1.0.x",
                             "seedrandom":                   "2.4.3",
                             "signal":                       "3.0.x"
     },

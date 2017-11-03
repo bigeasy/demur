@@ -1,16 +1,17 @@
 var Signal = require('signal')
 var cadence = require('cadence')
 var seedrandom = require('seedrandom')
+var coalesce = require('extant')
 
 function Demur (options) {
     options || (options = {})
-    this._retries = options.retires || Infinity
-    this._factor = options.factor || 2
-    this._delay = options.delay || 0
-    this._minimum = options.minimum || 1000
-    this._maximum = options.maximum || Infinity
-    this._reset = options.reset || Infinity
-    this._Date = options.Date || Date
+    this._retries = coalesce(options.retires, Infinity)
+    this._factor = coalesce(options.factor, 2)
+    this._delay = coalesce(options.delay, 0)
+    this._minimum = coalesce(options.minimum, 1000)
+    this._maximum = coalesce(options.maximum, Infinity)
+    this._reset = coalesce(options.reset, Infinity)
+    this._Date = coalesce(options.Date, Date)
     this._random = options.randomize
                  ? seedrandom(options.seed || this._Date.now())
                  : function () { return 0.5 }
