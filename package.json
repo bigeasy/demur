@@ -7,7 +7,7 @@
 
     "keywords":
     [
-                            "async", "timeout"
+                            "cadence", "async", "timeout"
     ],
     "author":               "Alan Gutierrez <alan@prettyrobots.com>",
     "homepage":             "https://bigeasy.github.io/demur",
