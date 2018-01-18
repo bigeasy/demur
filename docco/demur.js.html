@@ -33,16 +33,17 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> Signal = <span class="hljs-built_in">require</span>(<span class="hljs-string">'signal'</span>)
 <span class="hljs-keyword">var</span> cadence = <span class="hljs-built_in">require</span>(<span class="hljs-string">'cadence'</span>)
 <span class="hljs-keyword">var</span> seedrandom = <span class="hljs-built_in">require</span>(<span class="hljs-string">'seedrandom'</span>)
+<span class="hljs-keyword">var</span> coalesce = <span class="hljs-built_in">require</span>(<span class="hljs-string">'extant'</span>)
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Demur</span> (<span class="hljs-params">options</span>) </span>{
     options || (options = {})
-    <span class="hljs-keyword">this</span>._retries = options.retires || <span class="hljs-literal">Infinity</span>
-    <span class="hljs-keyword">this</span>._factor = options.factor || <span class="hljs-number">2</span>
-    <span class="hljs-keyword">this</span>._delay = options.delay || <span class="hljs-number">0</span>
-    <span class="hljs-keyword">this</span>._minimum = options.minimum || <span class="hljs-number">1000</span>
-    <span class="hljs-keyword">this</span>._maximum = options.maximum || <span class="hljs-literal">Infinity</span>
-    <span class="hljs-keyword">this</span>._reset = options.reset || <span class="hljs-literal">Infinity</span>
-    <span class="hljs-keyword">this</span>._Date = options.Date || <span class="hljs-built_in">Date</span>
+    <span class="hljs-keyword">this</span>._retries = coalesce(options.retires, <span class="hljs-literal">Infinity</span>)
+    <span class="hljs-keyword">this</span>._factor = coalesce(options.factor, <span class="hljs-number">2</span>)
+    <span class="hljs-keyword">this</span>._delay = coalesce(options.delay, <span class="hljs-number">0</span>)
+    <span class="hljs-keyword">this</span>._minimum = coalesce(options.minimum, <span class="hljs-number">1000</span>)
+    <span class="hljs-keyword">this</span>._maximum = coalesce(options.maximum, <span class="hljs-literal">Infinity</span>)
+    <span class="hljs-keyword">this</span>._reset = coalesce(options.reset, <span class="hljs-literal">Infinity</span>)
+    <span class="hljs-keyword">this</span>._Date = coalesce(options.Date, <span class="hljs-built_in">Date</span>)
     <span class="hljs-keyword">this</span>._random = options.randomize
                  ? seedrandom(options.seed || <span class="hljs-keyword">this</span>._Date.now())
                  : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> }
@@ -95,7 +96,9 @@ Demur.prototype.cancel = <span class="hljs-function"><span class="hljs-keyword">
     }
 }
 
-<span class="hljs-built_in">module</span>.exports = Demur</pre></div></div>
+<span class="hljs-built_in">module</span>.exports = Demur
+
+</pre></div></div>
 
         </li>
 
