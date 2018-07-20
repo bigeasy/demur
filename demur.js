@@ -59,8 +59,8 @@ Demur.prototype.reset = function () {
 Demur.prototype.cancel = function () {
     this.cancelled = true
     if (this._timeout != null) {
-        this._retrying.notify()
         clearTimeout(this._timeout)
+        this._retrying.notify()
     }
 }
 
