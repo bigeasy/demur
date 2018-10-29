@@ -1,49 +1,30 @@
 var Signal = require('signal')
 var cadence = require('cadence')
-var seedrandom = require('seedrandom')
 var coalesce = require('extant')
 
+var Calculator = require('./calculator')
+
 function Demur (options) {
-    options || (options = {})
-    this._retries = coalesce(options.retires, Infinity)
-    this._factor = coalesce(options.factor, 2)
-    this._delay = coalesce(options.delay, 0)
-    this._minimum = coalesce(options.minimum, 1000)
-    this._maximum = coalesce(options.maximum, Infinity)
-    this._reset = coalesce(options.reset, Infinity)
-    this._Date = coalesce(options.Date, Date)
-    this._random = options.randomize
-                 ? seedrandom(options.seed || this._Date.now())
-                 : function () { return 0.5 }
-    this._lastChecked = options.reset == null ? 0 : this._Date.now() - options.reset - 1
-    this._duration = this._minimum
-    this._attempt = 0
+    options = coalesce(options, {})
+    this._calculator = new Calculator(options)
+    this._retries = coalesce(options.retries, Infinity)
     this._retrying = new Signal
 }
 
-Demur.prototype._retry = function (random) {
-    var now = this._Date.now()
-    if (this.cancelled || ++this._attempt > this._retries) {
-        this.cancelled = true
-        return 0
-    }
-    var since = now - this._lastChecked
-    this._lastChecked = now
-    if (since >= this._reset) {
-        this.reset()
-        return this._delay
-    }
-    var duration = this._duration
-    this._duration = Math.min(this._factor * this._duration, this._maximum)
-    return Math.round(duration * (1 + (random() - 0.5)))
+Demur.prototype._demur = function (retrying, duration) {
+    this._timeout = setTimeout(function () { retrying.notify() }, duration)
 }
 
 Demur.prototype.retry = cadence(function (async) {
+    if (this.cancelled || this._calculator.attempt == this._retries) {
+        this.cancelled = true
+        return false
+    }
     async(function () {
-        var duration = this._retry(this._random)
+        var duration = this._calculator.duration()
         if (duration != 0) {
             this._retrying.wait(async())
-            this._timeout = setTimeout(this._retrying.notify.bind(this._retrying), duration)
+            this._demur(this._retrying, duration)
         }
     }, function () {
         this._timeout = null
@@ -52,8 +33,8 @@ Demur.prototype.retry = cadence(function (async) {
 })
 
 Demur.prototype.reset = function () {
-    this._duration = this._minimum
-    this._attempt = 0
+    this._calculator.reset()
+    this.cancelled = false
 }
 
 Demur.prototype.cancel = function () {
