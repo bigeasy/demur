@@ -1,4 +1,4 @@
-require('proof')(6, require('cadence')(prove))
+require('proof')(5, require('cadence')(prove))
 
 function prove (async, assert) {
     var Demur = require('..'), time = 1000, demur
@@ -12,7 +12,6 @@ function prove (async, assert) {
         reset: 1000,
         Date: { now: function () { return time } }
     })
-    var now
     async(function () {
         demur.retry(async())
     }, function (again) {
@@ -28,13 +27,5 @@ function prove (async, assert) {
         demur.cancel()
     }, function (again) {
         assert(! again, 'still cancelled')
-        demur = new Demur({
-            immediate: true,
-            Date: { now: function () { return time } }
-        })
-        now = Date.now()
-        demur.retry(async())
-    }, function () {
-        assert(Date.now() - now < 1000, 'immediate')
     })
 }
