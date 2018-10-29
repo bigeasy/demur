@@ -1,40 +1,34 @@
-require('proof')(6, require('cadence')(prove))
+require('proof')(7, require('cadence')(prove))
 
-function prove (async, assert) {
-    var Demur = require('..'), time = 1000, demur
-    demur = new Demur
-    demur = new Demur({
-        randomize: true,
-        Date: { now: function () { return time } }
-    })
-    assert(demur._retry(demur._random), 608, 'rng delay')
-    demur = new Demur({
-        reset: 1000,
-        Date: { now: function () { return time } }
-    })
-    var now
+function prove (async, okay) {
+    var Demur = require('../demur')
+    var demur = new Demur({ immediate: true, retries: 2 }), when
     async(function () {
-        demur.retry(async())
-    }, function (again) {
-        assert(again, 'no wait')
-        demur.retry(async())
-    }, function (again) {
-        assert(again, 'waited')
-        demur.retry(async())
-        demur.cancel()
-    }, function (again) {
-        assert(! again, 'cancelled')
-        demur.retry(async())
-        demur.cancel()
-    }, function (again) {
-        assert(! again, 'still cancelled')
-        demur = new Demur({
-            immediate: true,
-            Date: { now: function () { return time } }
-        })
-        now = Date.now()
+        when = Date.now()
         demur.retry(async())
     }, function () {
-        assert(Date.now() - now < 1000, 'immediate')
+        okay(Date.now() - when < 999, 'immediate')
+        demur.retry(async())
+        when = Date.now()
+    }, function () {
+        okay(Date.now() - when >= 1000, 'delayed')
+        when = Date.now()
+        demur.retry(async())
+    }, function (kosher) {
+        okay(! kosher, 'retry exhaustion')
+        demur.retry(async())
+    }, function (kosher) {
+        okay(! kosher, 'already cancelled')
+        demur.reset()
+        demur.retry(async())
+        when = Date.now()
+    }, function (kosher) {
+        okay(Date.now() - when < 999, 'reset immediate')
+        okay(kosher, 'restored')
+        demur.retry(async())
+        setTimeout(function () { demur.cancel() }, 250)
+    }, function (kosher) {
+        okay(! kosher, 'cancel while waiting')
+        demur.cancel()
     })
 }
