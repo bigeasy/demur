@@ -22,7 +22,7 @@
     {
                             "cadence":                      "3.0.x",
                             "extant":                       "1.0.x",
-                            "seedrandom":                   "2.4.4",
+                            "seedrandom":                   "3.0.1",
                             "signal":                       "7.0.x"
     },
     "devDependencies":
