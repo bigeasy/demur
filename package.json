@@ -21,6 +21,7 @@
     "dependencies":
     {
                             "cadence":                      "3.0.x",
+                            "delay":                        "4.2.0",
                             "extant":                       "1.0.x",
                             "seedrandom":                   "3.0.1",
                             "signal":                       "7.0.x"
@@ -32,6 +33,6 @@
     "main": "demur",
     "scripts":
     {
-                            "test": "proof test test/*.t.js"
+                            "test": "proof test test/*.t.js && mocha"
     }
 }
