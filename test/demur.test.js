@@ -1,6 +1,6 @@
 describe('demur', () => {
     const assert = require('assert')
-    const Demur = require('../es6')
+    const Demur = require('..')
     it('can continue immediately at first', async () => {
         const when = Date.now()
         const demur = new Demur({ immediate: true, attempts: 2 })

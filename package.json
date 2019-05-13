@@ -27,7 +27,7 @@
     "devDependencies":
     {
     },
-    "main": "demur",
+    "main":                 "demur",
     "scripts":
     {
                             "test": "mocha"
