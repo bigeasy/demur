@@ -13,9 +13,9 @@ describe('demur', () => {
         const when = Date.now()
         const demur = new Demur({ immediate: true, attempts: 2, minimum: 25 })
         assert(await demur.demur(), 'continue')
-        assert(Date.now() - when < 25, 'immediate')
+        assert(Date.now() - when < 24, 'immediate')
         assert(await demur.demur(), 'continue')
-        assert(Date.now() - when > 25, 'demurred')
+        assert(Date.now() - when > 24, 'demurred')
     })
     it('can give up', async () => {
         const when = Date.now()
