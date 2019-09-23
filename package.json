@@ -30,6 +30,6 @@
     "main":                 "demur",
     "scripts":
     {
-                            "test": "mocha"
+                            "test": "mocha test/*.test.js"
     }
 }
