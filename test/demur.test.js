@@ -44,4 +44,36 @@ describe('demur', () => {
         assert(Date.now() - when < 25, 'timer stopped')
         assert(demur.canceled, 'canceled')
     })
+    it('can work as a function', async () => {
+        const demur = Demur.demur
+        assert.equal(await demur({ immediate: true }, async () => 1), 1, 'as function')
+    })
+    it('can result a default as a function', async () => {
+        const demur = Demur.demur
+        assert.equal(await demur({ retries: 1, default: 0, immediate: true }, () => {
+            throw new Error
+        }), 0, 'return default')
+    })
+    it('can log an error', async () => {
+        const demur = Demur.demur
+        const test = []
+        await demur({ retries: 1, default: 0, immediate: true }, () => {
+            throw new Error('thrown')
+        }, (error) => test.push(error.message))
+        assert.deepStrictEqual(test, [ 'thrown' ], 'log error')
+    })
+    it('can bail', async () => {
+        const demur = Demur.demur
+        const test = []
+        assert.equal(await demur({ retries: 1, default: 0, immediate: true }, () => {
+            demur.bail()
+        }), null, 'bail')
+    })
+    it('can bail with a value', async () => {
+        const demur = Demur.demur
+        const test = []
+        assert.equal(await demur({ retries: 1, default: 0, immediate: true }, () => {
+            demur.bail(2)
+        }), 2, 'bail')
+    })
 })
