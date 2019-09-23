@@ -2,7 +2,7 @@ describe('calculator', () => {
     const assert = require('assert')
     const Calculator = require('../calculator')
     it('can randomize backoff', () => {
-        const calculator = new Calculator({ randomize: true, seed: 0 })
+        const calculator = new Calculator({ randomize: true, seed: 0, immediate: false })
         assert.equal(calculator.duration(), 538, 'randomized')
     })
 })

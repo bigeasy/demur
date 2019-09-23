@@ -4,7 +4,7 @@ var seedrandom = require('seedrandom')
 function Calculator (options) {
     this._factor = coalesce(options.factor, 2)
     this._delay = coalesce(options.delay, 0)
-    this._immediate = coalesce(options.immediate, false)
+    this._immediate = coalesce(options.immediate, true)
     this._minimum = coalesce(options.minimum, 1000)
     this._maximum = coalesce(options.maximum, Infinity)
     this._random = options.randomize
