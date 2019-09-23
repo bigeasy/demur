@@ -1,4 +1,3 @@
-const delay = require('delay')
 const coalesce = require('extant')
 const Calculator = require('./calculator')
 
@@ -8,7 +7,8 @@ class Demur {
         this.canceled = false
         this._calculator = new Calculator(options)
         this._retries = coalesce(options.attempts, Infinity)
-        this._deferral = delay(0)
+        this._resolve = () => {}
+        this._timeout = null
     }
 
     async demur () {
@@ -18,7 +18,9 @@ class Demur {
         }
         const duration = this._calculator.duration()
         if (duration != 0) {
-            await (this._deferral = delay(duration))
+            await new Promise(resolve => {
+                this._timeout = setTimeout(this._resolve = resolve, duration)
+            })
         }
         return ! this.canceled
     }
@@ -30,7 +32,8 @@ class Demur {
 
     cancel () {
         this.canceled = true
-        this._deferral.clear()
+        clearTimeout(this._timeout)
+        this._resolve.call()
     }
 }
 
